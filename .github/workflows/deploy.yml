@@ -47,9 +47,12 @@ jobs:
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "$PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          if ! ssh-keyscan -T 15 -p "$PORT" "$SSH_HOST" > ~/.ssh/known_hosts 2>/dev/null || [ ! -s ~/.ssh/known_hosts ]; then
+            echo "::error::No SSH server answered on port $PORT of the host. Check SSH_HOST and SSH_PORT, and that external SSH access is enabled on the hosting."
+            exit 1
+          fi
           # Keep files the hosting itself puts there (SSL validation, cgi-bin).
           rsync -az --delete \
             --filter='P .well-known/' --filter='P cgi-bin/' \
-            -e "ssh -p $PORT -i ~/.ssh/deploy_key" \
+            -e "ssh -p $PORT -i ~/.ssh/deploy_key -o BatchMode=yes -o ConnectTimeout=20" \
             dist/ "$SSH_USER@$SSH_HOST:${DEPLOY_PATH%/}/"
