@@ -1,0 +1,37 @@
+/* Design tokens. Mirrors the "Warren" variable collection in Figma one-to-one:
+   a Figma variable `color/bg/ink` is `--color-bg-ink` here. */
+:root {
+  --color-bg-ink: #07070b;
+  --color-bg-surface: #101018;
+  --color-bg-raised: #181822;
+  --color-line: #2a2a36;
+  --color-text-primary: #edebe6;
+  --color-text-muted: #8a8894;
+  --color-text-faint: #55535f;
+  --color-accent-orbita: #ffb454;
+  --color-accent-pulse: #ff4d5e;
+  --color-accent-synesthesia: #9b6bff;
+  --color-accent-atelier: #d8c8a8;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  --radius-lg: 28px;
+
+  --font-display: 'Instrument Serif', 'Times New Roman', serif;
+  --font-body: 'Geist Variable', system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+
+  /* Page gutter: 64px on desktop (space/16), 20px on phones. */
+  --gutter: clamp(20px, 4.5vw, 64px);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

@@ -1,0 +1,185 @@
+---
+import Base from '../layouts/Base.astro';
+import Tunnel from '../components/showcase/Tunnel.svelte';
+import ExperimentCard from '../components/showcase/ExperimentCard.svelte';
+import { experiments } from '../lib/experiments';
+
+// The headline is split into words so each one can rise in with its own delay.
+const headline = [
+  { text: 'A', italic: false },
+  { text: 'warren', italic: true },
+  { text: 'of', italic: false, breakAfter: true },
+  { text: 'interface', italic: false },
+  { text: 'experiments', italic: false },
+];
+---
+
+<Base
+  title="Warren — interface experiments"
+  description="Four interface experiments built with Svelte and Solid, designed in Figma: deep space, live seismic data, visible sound and an object of desire."
+>
+  <header class="nav">
+    <a href="/" class="label-md">Warren</a>
+    <nav class="links" aria-label="Experiments">
+      {
+        experiments.map((e) =>
+          e.href ? (
+            <a href={e.href} class="label-sm muted">
+              {e.number} {e.title}
+            </a>
+          ) : (
+            <span class="label-sm faint">
+              {e.number} {e.title}
+            </span>
+          ),
+        )
+      }
+    </nav>
+    <a href="https://krolikx.com" class="label-sm muted">krolikx.com ↗</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <Tunnel client:load />
+      <div class="hero-content">
+        <p class="label-md muted rise" style="--i: 0">Four experiments · One burrow</p>
+        <h1 class="display-xl">
+          {
+            headline.map((word, i) => (
+              <>
+                <span class="word">
+                  <span class="rise" style={`--i: ${i + 1}`}>
+                    {word.italic ? <em>{word.text}</em> : word.text}
+                  </span>
+                </span>
+                {word.breakAfter ? <br /> : ' '}
+              </>
+            ))
+          }
+        </h1>
+        <div class="hero-footer">
+          <p class="body-lg muted rise" style="--i: 7">
+            Each tunnel leads somewhere different: deep space, a trembling planet, sound made
+            visible, an object of desire. Built with Svelte and Solid, designed in Figma.
+          </p>
+          <a href="#experiments" class="label-md rise" style="--i: 8">Scroll ↓</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="experiments" class="grid">
+      {experiments.map((e, i) => <ExperimentCard experiment={e} index={i} client:visible />)}
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="label-sm faint">Warren — a krolikx lab</span>
+    <span class="label-sm faint">Svelte 5 · Solid · Astro · Figma</span>
+  </footer>
+</Base>
+
+<style>
+  .nav {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-8) var(--gutter);
+  }
+  .links {
+    display: flex;
+    gap: var(--space-8);
+  }
+  .links a:hover,
+  .nav > a:hover {
+    color: var(--color-text-primary);
+  }
+
+  .hero {
+    position: relative;
+    margin-top: -90px; /* let the tunnel extend under the nav */
+    padding: calc(90px + clamp(48px, 9vw, 96px)) var(--gutter) clamp(64px, 9vw, 96px);
+    min-height: min(100vh, 980px);
+    display: flex;
+    align-items: flex-end;
+  }
+  .hero-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    width: 100%;
+  }
+  h1 em {
+    font-style: italic;
+  }
+  /* Each word is clipped by its own box and slides up into it. */
+  .word {
+    display: inline-block;
+    overflow: hidden;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+    vertical-align: bottom;
+  }
+  .rise {
+    display: inline-block;
+    animation: rise 1.1s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 70ms + 100ms);
+  }
+  p.rise,
+  a.rise {
+    display: block;
+  }
+  @keyframes rise {
+    from {
+      transform: translateY(105%);
+      opacity: 0;
+    }
+  }
+  .hero-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-8);
+  }
+  .hero-footer p {
+    max-width: 560px;
+  }
+  .hero-footer a {
+    white-space: nowrap;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(24px, 5.5vw, 80px);
+    padding: var(--space-8) var(--gutter) var(--space-24);
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-8) var(--gutter);
+    border-top: 1px solid var(--color-line);
+  }
+
+  @media (max-width: 860px) {
+    .links {
+      display: none;
+    }
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rise {
+      animation: none;
+    }
+  }
+</style>

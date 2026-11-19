@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import Journey from '../../components/orbita/Journey.svelte';
+---
+
+<Base
+  title="Orbita — a scroll through the Solar System · Warren"
+  description="Scroll from the Sun to Neptune. Every planet is drawn live by a single WebGL shader — no textures, no 3D engine."
+>
+  <Journey client:load />
+</Base>

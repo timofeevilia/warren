@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import Simulator from '../../components/orbita/Simulator.tsx';
+---
+
+<Base
+  title="Orbit simulator · Orbita · Warren"
+  description="Eight planets, a comet and five thousand asteroids on real Keplerian orbits. Drag to look around and bend time."
+>
+  <Simulator client:only="solid-js" />
+</Base>

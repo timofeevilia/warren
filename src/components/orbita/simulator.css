@@ -1,0 +1,196 @@
+.sim {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-bg-ink);
+  --accent: var(--color-accent-orbita);
+}
+.sim-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+.sim-canvas:active {
+  cursor: grabbing;
+}
+
+.sim-nav {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-8) var(--gutter);
+  pointer-events: none;
+}
+.sim-nav > * {
+  pointer-events: auto;
+}
+.sim-nav a:hover {
+  color: var(--color-text-primary);
+}
+.sim-toggle {
+  color: var(--color-accent-orbita);
+}
+.sim-accent {
+  color: var(--color-accent-orbita);
+}
+
+.sim-panel {
+  position: absolute;
+  top: 96px;
+  right: var(--gutter);
+  width: 340px;
+  max-height: calc(100vh - 96px - 56px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-bg-surface) 80%, transparent);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  animation: sim-panel-in 0.5s var(--ease-out);
+}
+@keyframes sim-panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+.sim-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.sim-panel .data-lg {
+  font-size: 24px;
+  white-space: nowrap;
+}
+.sim-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.sim-buttons,
+.sim-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.sim-buttons button,
+.sim-chips button {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-text-muted);
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background 0.2s;
+}
+.sim-buttons button:hover,
+.sim-chips button:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-text-muted);
+}
+.sim-chips button.current {
+  color: var(--color-bg-ink);
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.sim-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.sim-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--color-accent-orbita) var(--fill),
+    var(--color-line) var(--fill)
+  );
+}
+.sim-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-line);
+}
+.sim-slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-accent-orbita);
+}
+.sim-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--color-text-primary);
+}
+.sim-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-text-primary);
+}
+
+.sim-selected {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-line);
+}
+.sim-selected .display-md {
+  color: var(--accent);
+  font-size: 40px;
+}
+.sim-selected .data-lg {
+  font-size: 18px;
+}
+
+.sim-hint {
+  position: absolute;
+  left: var(--gutter);
+  bottom: var(--space-8);
+  margin: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 700px) {
+  .sim-panel {
+    top: auto;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: var(--space-3);
+    width: auto;
+    max-height: 62vh;
+    gap: var(--space-4);
+    padding: var(--space-4);
+  }
+  .sim-hint {
+    display: none;
+  }
+  .sim-nav > span {
+    display: none;
+  }
+}
