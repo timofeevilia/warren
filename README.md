@@ -49,8 +49,8 @@ npm run build
 ```
 
 Deployment is automatic: every push to `main` runs `.github/workflows/deploy.yml`, which builds the
-site and uploads `dist/` to the hosting over FTPS (repository secrets `FTP_SERVER`, `FTP_USERNAME`,
-`FTP_PASSWORD`).
+site and syncs `dist/` to the hosting with rsync over SSH (repository secrets `SSH_HOST`, `SSH_USER`,
+`SSH_PRIVATE_KEY`, `DEPLOY_PATH`, optional `SSH_PORT`).
 
 To do it by hand: the result of the build is a fully static site in `dist/`. To publish on shared hosting (cPanel): create a
 subdomain, then upload the *contents* of `dist/` into that subdomain's document root. There is no
