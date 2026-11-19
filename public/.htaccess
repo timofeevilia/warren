@@ -1,0 +1,2 @@
+# The document root is a git checkout of the built site; never serve its metadata.
+RedirectMatch 404 /\.git

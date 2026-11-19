@@ -48,9 +48,15 @@ npm run dev
 npm run build
 ```
 
-Deployment is automatic: every push to `main` runs `.github/workflows/deploy.yml`, which builds the
-site and syncs `dist/` to the hosting with rsync over SSH (repository secrets `SSH_HOST`, `SSH_USER`,
-`SSH_PRIVATE_KEY`, `DEPLOY_PATH`, optional `SSH_PORT`).
+Deployment is automatic and pull-based. Every push to `main` runs `.github/workflows/deploy.yml`,
+which builds the site and force-pushes the contents of `dist/` to the `deploy` branch. The hosting
+keeps the subdomain's document root as a checkout of that branch and refreshes it from cron:
+
+```
+*/5 * * * * cd /path/to/docroot && git fetch -q --depth 1 origin deploy && git reset -q --hard origin/deploy
+```
+
+Nothing connects into the hosting and no hosting credentials are stored in GitHub.
 
 To do it by hand: the result of the build is a fully static site in `dist/`. To publish on shared hosting (cPanel): create a
 subdomain, then upload the *contents* of `dist/` into that subdomain's document root. There is no

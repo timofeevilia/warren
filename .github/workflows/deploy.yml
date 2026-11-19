@@ -1,12 +1,8 @@
 name: Deploy
 
-# Builds the static site and syncs dist/ to the hosting with rsync over SSH.
-# Repository secrets:
-#   SSH_HOST         server hostname
-#   SSH_USER         hosting account user
-#   SSH_PRIVATE_KEY  private half of a key authorised on the server
-#   SSH_PORT         optional, defaults to 22
-#   DEPLOY_PATH      absolute path of the subdomain's document root
+# Builds the static site and publishes the result as the `deploy` branch.
+# The hosting pulls that branch on a schedule (see README), so nothing needs
+# to connect *into* the hosting and no credentials are stored here.
 
 on:
   push:
@@ -16,6 +12,9 @@ on:
 concurrency:
   group: deploy
   cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
@@ -28,31 +27,15 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - name: Sync to hosting
+      - name: Publish dist/ as the deploy branch
         env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ secrets.SSH_PORT }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          PORT="${SSH_PORT:-22}"
-          # rsync --delete removes anything on the server that is not in dist/.
-          # Refuse to run unless the target is clearly this site's own folder.
-          case "$DEPLOY_PATH" in
-            /*warren*) ;;
-            *) echo "DEPLOY_PATH must be an absolute path containing 'warren'"; exit 1 ;;
-          esac
-          mkdir -p ~/.ssh
-          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          if ! ssh-keyscan -T 15 -p "$PORT" "$SSH_HOST" > ~/.ssh/known_hosts 2>/dev/null || [ ! -s ~/.ssh/known_hosts ]; then
-            echo "::error::No SSH server answered on port $PORT of the host. Check SSH_HOST and SSH_PORT, and that external SSH access is enabled on the hosting."
-            exit 1
-          fi
-          # Keep files the hosting itself puts there (SSL validation, cgi-bin).
-          rsync -az --delete \
-            --filter='P .well-known/' --filter='P cgi-bin/' \
-            -e "ssh -p $PORT -i ~/.ssh/deploy_key -o BatchMode=yes -o ConnectTimeout=20" \
-            dist/ "$SSH_USER@$SSH_HOST:${DEPLOY_PATH%/}/"
+          cd dist
+          git init -q -b deploy
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Build of ${GITHUB_SHA}"
+          git push -q --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" deploy
