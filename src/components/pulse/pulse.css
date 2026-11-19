@@ -1,0 +1,152 @@
+.pulse-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  cursor: grab;
+}
+.pulse-canvas:active {
+  cursor: grabbing;
+}
+
+/* A ring around the place the story is talking about. */
+.pulse-marker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.pulse-marker::before {
+  content: '';
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-text-primary);
+  border-radius: 50%;
+  animation: pulse-ping 2s ease-out infinite;
+}
+.pulse-marker::after {
+  content: attr(data-name);
+  position: absolute;
+  left: 18px;
+  top: -8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 0 8px var(--color-bg-ink);
+}
+@keyframes pulse-ping {
+  from {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.pulse-nogl {
+  position: fixed;
+  right: var(--gutter);
+  top: 50%;
+  z-index: 2;
+}
+
+.pulse-hud {
+  position: fixed;
+  right: var(--gutter);
+  bottom: var(--space-8);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-bg-surface) 72%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.pulse-hud-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+.pulse-status {
+  color: var(--color-text-muted);
+}
+.pulse-status.live {
+  color: var(--color-accent-pulse);
+}
+.pulse-hud-grid {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: var(--space-8);
+}
+.pulse-stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 9ch;
+}
+.pulse-hud .data-lg {
+  font-size: 22px;
+  white-space: nowrap;
+}
+.pulse-hud small {
+  font-size: 0.5em;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+.pulse-south {
+  color: var(--color-accent-pulse);
+}
+.pulse-spark {
+  width: 100%;
+  height: 18px;
+  margin-top: var(--space-1);
+}
+.pulse-spark path {
+  fill: none;
+  stroke: var(--color-accent-pulse);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+@media (max-width: 860px) {
+  .pulse-hud {
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-2);
+  }
+  .pulse-hud-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+  }
+  .pulse-stat {
+    min-width: 0;
+  }
+  .pulse-hud .data-lg {
+    font-size: 15px;
+  }
+  .pulse-hud small {
+    display: block;
+  }
+  .pulse-spark {
+    display: none;
+  }
+}

@@ -5,7 +5,7 @@ A burrow of interface experiments built with **Svelte 5** and **Solid**, glued t
 | # | Experiment | Status | What it is |
 |---|---|---|---|
 | 01 | **Orbita** | live | A scroll journey from the Sun to Neptune plus a real-time orbit simulator |
-| 02 | Pulse | planned | Live earthquakes on a globe |
+| 02 | **Pulse** | live | Where the aurora is right now, on a globe driven by NOAA space weather data |
 | 03 | Synesthesia | planned | An audio-visual instrument |
 | 04 | Atelier | planned | A product page and configurator for a brand that doesn't exist |
 
@@ -29,6 +29,9 @@ src/
   components/showcase/       Svelte: hero tunnel, experiment cards
   components/orbita/         Journey.svelte, Simulator.tsx
   lib/orbita/                planet data, Kepler solver, planet shader
+  components/pulse/          Globe.tsx (Solid) + Story.svelte, on the same page
+  lib/pulse/                 shared stores, NOAA feeds, globe shader
+scripts/                     land-mask generator, NOAA snapshot fetched before each build
 docs/journal/                build log: what was made and how
 ```
 

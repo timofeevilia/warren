@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "prebuild": "node scripts/fetch-snapshot.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",
@@ -20,5 +21,9 @@
     "solid-js": "^1.9.19",
     "svelte": "^5.58.0",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   }
 }

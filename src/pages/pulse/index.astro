@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import Globe from '../../components/pulse/Globe.tsx';
+import Story from '../../components/pulse/Story.svelte';
+---
+
+<Base
+  title="Pulse — the aurora, live · Warren"
+  description="Where the northern and southern lights are right now, drawn on a live globe from NOAA space weather data."
+>
+  <!-- Two frameworks on one page: Solid draws the globe, Svelte tells the story.
+       They share state through plain stores in src/lib/pulse/data.ts. -->
+  <Globe client:only="solid-js" />
+  <Story client:load />
+</Base>

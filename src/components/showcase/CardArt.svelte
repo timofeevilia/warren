@@ -58,48 +58,53 @@
     },
 
     pulse(ctx, w, h, t) {
+      // A dotted globe seen from above the pole, with a shimmering aurora oval.
       const cx = w * 0.5;
-      const cy = h * 0.56;
-      const R = h * 0.42;
-      const rot = t * 0.18;
-      // Dotted sphere: latitude rows of points, rotated around Y.
-      for (let lat = -80; lat <= 80; lat += 10) {
-        const phi = (lat * Math.PI) / 180;
-        const count = Math.max(6, Math.round(44 * Math.cos(phi)));
+      const cy = h * 0.98;
+      const R = h * 0.82; // the globe is larger than the card: we see its top
+      const rot = t * 0.12;
+      const tilt = 0.6; // camera latitude, radians
+      const st = Math.sin(tilt);
+      const ct = Math.cos(tilt);
+      const project = (lat: number, lon: number) => {
+        const x = Math.cos(lat) * Math.sin(lon);
+        const y = Math.sin(lat);
+        const z = Math.cos(lat) * Math.cos(lon);
+        return [x, y * ct - z * st, y * st + z * ct]; // screen x, screen y (up), depth
+      };
+      for (let latDeg = 0; latDeg <= 84; latDeg += 7) {
+        const lat = (latDeg * Math.PI) / 180;
+        const count = Math.max(6, Math.round(70 * Math.cos(lat)));
         for (let i = 0; i < count; i++) {
-          const theta = (i / count) * TAU + rot;
-          const x = Math.cos(phi) * Math.sin(theta);
-          const z = Math.cos(phi) * Math.cos(theta);
+          const [x, y, z] = project(lat, (i / count) * TAU + rot);
           if (z < 0) continue;
-          ctx.fillStyle = `rgba(237, 235, 230, ${0.08 + z * 0.3})`;
-          ctx.fillRect(cx + x * R, cy - Math.sin(phi) * R, 1.4, 1.4);
+          ctx.fillStyle = `rgba(237, 235, 230, ${0.08 + z * 0.34})`;
+          ctx.fillRect(cx + x * R, cy - y * R, 1.5, 1.5);
         }
       }
-      // Quakes: fixed spots on the sphere that emit expanding rings.
-      const quakes = [
-        [0.3, 0.6, 0],
-        [-0.25, 2.2, 0.37],
-        [0.55, 3.9, 0.71],
-        [-0.05, 5.1, 0.52],
-      ];
-      for (const [phi, lon, phase] of quakes) {
-        const theta = lon + rot;
-        const x = Math.cos(phi) * Math.sin(theta);
-        const z = Math.cos(phi) * Math.cos(theta);
-        if (z < 0.1) continue;
+      // The oval: a ring around the pole, drawn as short vertical rays.
+      ctx.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < 220; i++) {
+        const lon = (i / 220) * TAU;
+        const lat = ((62 + 3 * Math.sin(lon * 2 + t * 0.3)) * Math.PI) / 180;
+        const [x, y, z] = project(lat, lon + rot * 0.4);
+        if (z < -0.05) continue;
+        const flicker = 0.35 + 0.65 * Math.abs(Math.sin(i * 12.9898 + t * (0.8 + (i % 7) * 0.13)));
         const px = cx + x * R;
-        const py = cy - Math.sin(phi) * R;
-        const life = (t * 0.45 + phase) % 1;
-        ctx.strokeStyle = `rgba(255, 77, 94, ${(1 - life) * z})`;
-        ctx.lineWidth = 1.5;
+        const py = cy - y * R;
+        const height = (14 + 30 * flicker) * (0.45 + 0.55 * z);
+        const ray = ctx.createLinearGradient(px, py, px, py - height);
+        ray.addColorStop(0, `rgba(77, 255, 176, ${0.55 * flicker})`);
+        ray.addColorStop(0.6, `rgba(120, 140, 255, ${0.25 * flicker})`);
+        ray.addColorStop(1, 'rgba(160, 90, 255, 0)');
+        ctx.strokeStyle = ray;
+        ctx.lineWidth = 2.2;
         ctx.beginPath();
-        ctx.ellipse(px, py, life * 34 * z + 2, life * 34 + 2, 0, 0, TAU);
+        ctx.moveTo(px, py);
+        ctx.lineTo(px, py - height);
         ctx.stroke();
-        ctx.fillStyle = `rgba(255, 77, 94, ${z})`;
-        ctx.beginPath();
-        ctx.arc(px, py, 2.5, 0, TAU);
-        ctx.fill();
       }
+      ctx.globalCompositeOperation = 'source-over';
     },
 
     synesthesia(ctx, w, h, t) {

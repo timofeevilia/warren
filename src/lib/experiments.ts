@@ -26,10 +26,10 @@ export const experiments: Experiment[] = [
     number: '02',
     title: 'Pulse',
     description:
-      "The planet's seismic heartbeat, live. Every earthquake of the last 30 days on a breathing globe.",
-    tags: 'Svelte × Solid · Live data',
+      "The planet's magnetic pulse, live. Watch the aurora ovals breathe as the solar wind arrives from the Sun.",
+    tags: 'Svelte × Solid · Live NOAA data',
     accent: 'var(--color-accent-pulse)',
-    href: null,
+    href: '/pulse/',
   },
   {
     id: 'synesthesia',
