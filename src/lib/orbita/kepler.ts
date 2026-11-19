@@ -41,13 +41,19 @@ export function bake(out: Float32Array, index: number, o: Orbit) {
   out[k + 9] = cw * si;
 }
 
-/** Solve Kepler's equation M = E − e·sin E by Newton's method. */
+/**
+ * Solve Kepler's equation M = E − e·sin E by Newton's method. M must be in [−π, π].
+ *
+ * For nearly circular orbits E ≈ M is a fine first guess. For very elongated ones
+ * (a comet) Newton only converges reliably when started from ±π on the same side
+ * as M; starting on the wrong side makes it overshoot and the body jumps around.
+ */
 export function eccentricAnomaly(M: number, e: number) {
-  let E = e < 0.8 ? M : Math.PI;
-  for (let i = 0; i < 6; i++) {
+  let E = e < 0.8 ? M : M < 0 ? -Math.PI : Math.PI;
+  for (let i = 0; i < 30; i++) {
     const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
     E -= d;
-    if (Math.abs(d) < 1e-6) break;
+    if (Math.abs(d) < 1e-7) break;
   }
   return E;
 }
