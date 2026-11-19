@@ -48,7 +48,11 @@ npm run dev
 npm run build
 ```
 
-The result is a fully static site in `dist/`. To publish on shared hosting (cPanel): create a
+Deployment is automatic: every push to `main` runs `.github/workflows/deploy.yml`, which builds the
+site and uploads `dist/` to the hosting over FTPS (repository secrets `FTP_SERVER`, `FTP_USERNAME`,
+`FTP_PASSWORD`).
+
+To do it by hand: the result of the build is a fully static site in `dist/`. To publish on shared hosting (cPanel): create a
 subdomain, then upload the *contents* of `dist/` into that subdomain's document root. There is no
 server-side code and no database.
 
