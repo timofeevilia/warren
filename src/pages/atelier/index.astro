@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import Watch from '../../components/atelier/Watch.tsx';
+import Configurator from '../../components/atelier/Configurator.tsx';
+import Story from '../../components/atelier/Story.svelte';
+---
+
+<Base
+  theme="paper"
+  title="Atelier Lièvre — Terrier 38 · Warren"
+  description="A watchmaker that doesn't exist and a watch you can configure down to the engraving. Drawn in SVG, keeping real time."
+>
+  <!-- Three islands, two frameworks, one shared configuration (src/lib/atelier/catalog.ts):
+       Solid draws the watch and runs the configurator, Svelte writes the page around them. -->
+  <Watch client:only="solid-js" />
+  <Story client:load />
+
+  <section id="build" class="build">
+    <p class="label-md kicker">04 — Yours</p>
+    <h2 class="display-lg">Build it</h2>
+    <p class="body-lg muted lead">
+      Every choice is saved in the address of this page. Copy the link and you have sent someone a
+      watch.
+    </p>
+    <Configurator client:load />
+  </section>
+
+  <footer class="footer">
+    <span class="label-sm faint">
+      Atelier Lièvre is fictional. Nothing on this page is for sale, and the prices are invented.
+    </span>
+    <span class="label-sm faint">Warren · Experiment 04</span>
+  </footer>
+</Base>
+
+<style>
+  .build {
+    position: relative;
+    z-index: 2;
+    width: 46vw;
+    min-height: 100vh;
+    padding: 18vh 0 12vh var(--gutter);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    scroll-margin-top: -6vh;
+  }
+  .kicker {
+    color: var(--color-accent-atelier);
+  }
+  .lead {
+    max-width: 470px;
+    margin-bottom: var(--space-4);
+  }
+  .footer {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding: var(--space-8) var(--gutter);
+    border-top: 1px solid var(--color-line);
+    background: var(--color-bg-ink);
+  }
+  @media (max-width: 860px) {
+    .build {
+      width: 100%;
+      padding: 50vh var(--space-4) var(--space-12);
+      gap: var(--space-3);
+    }
+    .footer {
+      flex-direction: column;
+    }
+  }
+</style>

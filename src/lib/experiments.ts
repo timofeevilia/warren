@@ -46,9 +46,9 @@ export const experiments: Experiment[] = [
     number: '04',
     title: 'Atelier',
     description:
-      "A house that doesn't exist, selling an object you'll want anyway. Configure it down to the last screw.",
-    tags: 'Svelte × Solid · 3D',
+      "A watchmaker that doesn't exist, selling a watch you'll want anyway. Build yours down to the engraving.",
+    tags: 'Svelte × Solid · Configurator',
     accent: 'var(--color-accent-atelier)',
-    href: null,
+    href: '/atelier/',
   },
 ];

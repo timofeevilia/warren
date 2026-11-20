@@ -35,3 +35,16 @@
   --gutter: clamp(20px, 4.5vw, 64px);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* A second theme, made by redefining the same tokens. Components don't change:
+   anything that says "background: var(--color-bg-ink)" is now warm paper. */
+.theme-paper {
+  --color-bg-ink: #eee9df;
+  --color-bg-surface: #e5dfd3;
+  --color-bg-raised: #d9d2c4;
+  --color-line: #cbc3b3;
+  --color-text-primary: #17150f;
+  --color-text-muted: #6b665a;
+  --color-text-faint: #9a9486;
+  --color-accent-atelier: #8a6a3b;
+}

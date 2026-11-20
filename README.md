@@ -7,7 +7,7 @@ A burrow of interface experiments built with **Svelte 5** and **Solid**, glued t
 | 01 | **Orbita** | live | A scroll journey from the Sun to Neptune plus a real-time orbit simulator |
 | 02 | **Pulse** | live | Where the aurora is right now, on a globe driven by NOAA space weather data |
 | 03 | **Synesthesia** | live | A browser synth whose visuals are drawn live from its own sound |
-| 04 | Atelier | planned | A product page and configurator for a brand that doesn't exist |
+| 04 | **Atelier** | live | A fictional watchmaker: an SVG watch that keeps real time, and a configurator stored in the URL |
 
 ## Who does what
 
@@ -33,6 +33,8 @@ src/
   lib/pulse/                 NOAA feeds, globe shader
   components/synesthesia/    Instrument.tsx (Solid) + Shell.svelte
   lib/synesthesia/           Web Audio engine, audio-reactive shader
+  components/atelier/        Watch.tsx + Configurator.tsx (Solid) + Story.svelte
+  lib/atelier/               catalogue, pricing, URL encoding, shared state
   lib/store.ts               framework-agnostic store shared by Svelte and Solid islands
 scripts/                     land-mask generator, NOAA snapshot fetched before each build
 docs/journal/                build log: what was made and how

@@ -1,0 +1,266 @@
+/* ---------- The watch on its stage ---------- */
+.atl-stage {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 54vw;
+  height: 100vh;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  perspective: 1400px;
+  pointer-events: none;
+}
+.atl-pose {
+  /* The drawing is 400 x 660; size it by height, capped by the column width. */
+  width: min(44vh, 30vw);
+  aspect-ratio: 400 / 660;
+  transform-style: preserve-3d;
+  transition: transform 1.3s cubic-bezier(0.65, 0, 0.2, 1);
+}
+.atl-tilt {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+/* Browsers rasterise a 3D-transformed layer once, at its CSS size, and then stretch
+   that bitmap — which looks soft on high-density screens and when the watch zooms in.
+   So each face is laid out three times larger and scaled back down: the bitmap has
+   nine times the pixels and stays sharp. */
+.atl-face {
+  position: absolute;
+  left: -100%;
+  top: -100%;
+  width: 300%;
+  height: 300%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: visible;
+}
+.atl-front {
+  transform: translateZ(7px) scale(0.33334);
+}
+.atl-back {
+  transform: rotateY(180deg) translateZ(7px) scale(0.33334);
+}
+/* Oversized and scaled down for the same reason as the faces. */
+.atl-rim {
+  position: absolute;
+  left: -62.5%;
+  top: 50%;
+  width: 225%;
+  aspect-ratio: 1;
+  margin-top: -112.5%;
+  border-radius: 50%;
+}
+.atl-shadow {
+  position: absolute;
+  bottom: 7vh;
+  left: 50%;
+  width: min(30vh, 22vw);
+  height: 26px;
+  margin-left: calc(min(30vh, 22vw) / -2);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(23 21 15 / 0.32), transparent);
+  filter: blur(6px);
+  transition: opacity 1s;
+}
+.atl-stage[data-view='dial'] .atl-shadow,
+.atl-stage[data-view='movement'] .atl-shadow,
+.atl-stage[data-view='engrave'] .atl-shadow {
+  opacity: 0;
+}
+
+.atl-logo {
+  font-family: var(--font-display);
+  font-size: 21px;
+  letter-spacing: 0.2em;
+}
+.atl-small {
+  font-family: var(--font-mono);
+  font-size: 6.2px;
+  letter-spacing: 0.32em;
+}
+.atl-date {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 17px;
+}
+.atl-engraved {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+}
+.atl-engraved.custom {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+}
+
+/* ---------- Configurator ---------- */
+.atl-config {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: 520px;
+}
+.atl-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.atl-group legend {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  padding: 0 0 var(--space-3);
+  border-bottom: 1px solid var(--color-line);
+}
+.atl-group legend .label-sm {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+.atl-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.atl-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-text-muted);
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
+}
+.atl-option:not(.has-swatch) {
+  padding-left: var(--space-3);
+}
+.atl-option:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-text-muted);
+}
+.atl-option.current {
+  color: var(--color-bg-ink);
+  background: var(--color-text-primary);
+  border-color: var(--color-text-primary);
+}
+.atl-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.18);
+}
+.atl-plus {
+  opacity: 0.6;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.atl-engrave {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  transition: border-color 0.2s;
+}
+.atl-engrave:focus-within {
+  border-color: var(--color-text-primary);
+}
+.atl-engrave input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 22px;
+}
+.atl-engrave input::placeholder {
+  color: var(--color-text-faint);
+}
+
+.atl-summary {
+  position: sticky;
+  bottom: var(--space-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-md);
+  background: var(--color-text-primary);
+  color: var(--color-bg-ink);
+  box-shadow: 0 12px 40px rgb(23 21 15 / 0.22);
+}
+.atl-ref {
+  opacity: 0.6;
+}
+.atl-summary .data-lg {
+  font-size: 26px;
+}
+.atl-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+.atl-actions button {
+  padding: var(--space-2) var(--space-4);
+  border-radius: 999px;
+  border: 1px solid rgb(238 233 223 / 0.35);
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.atl-actions button:hover {
+  background: rgb(238 233 223 / 0.14);
+}
+.atl-actions button.primary {
+  background: var(--color-bg-ink);
+  color: var(--color-text-primary);
+  border-color: transparent;
+}
+
+@media (max-width: 860px) {
+  /* On a phone the watch sits in a band at the top, on its own strip of paper,
+     and the page scrolls underneath it. */
+  .atl-stage {
+    width: 100vw;
+    height: 46vh;
+    z-index: 3;
+    background: linear-gradient(to bottom, var(--color-bg-ink) 86%, transparent);
+  }
+  .atl-pose {
+    width: min(23vh, 44vw);
+  }
+  .atl-shadow {
+    display: none;
+  }
+  .atl-summary {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-3) var(--space-4);
+  }
+  .atl-actions button {
+    flex: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atl-pose {
+    transition: none;
+  }
+}

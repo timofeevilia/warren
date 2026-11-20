@@ -5,16 +5,18 @@ import { ClientRouter } from 'astro:transitions';
 interface Props {
   title: string;
   description: string;
+  /** 'paper' swaps the colour tokens for a light theme. */
+  theme?: 'ink' | 'paper';
 }
-const { title, description } = Astro.props;
+const { title, description, theme = 'ink' } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class={`theme-${theme}`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#07070b" />
+    <meta name="theme-color" content={theme === 'paper' ? '#eee9df' : '#07070b'} />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
