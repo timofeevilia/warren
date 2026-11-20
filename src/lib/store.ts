@@ -1,5 +1,5 @@
 // A minimal observable value. It knows nothing about Svelte or Solid, which is the
-// point: both islands on the Pulse page subscribe to the same instances, so the two
+// point: on pages with two islands, both subscribe to the same instances, so the two
 // frameworks stay in sync without knowing about each other.
 export interface Store<T> {
   get(): T;

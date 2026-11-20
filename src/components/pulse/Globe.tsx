@@ -18,7 +18,7 @@ import {
   type View,
 } from '../../lib/pulse/data';
 import { createGlobeRenderer, geoVector, viewBasis } from '../../lib/pulse/globe-shader';
-import type { Store } from '../../lib/pulse/store';
+import type { Store } from '../../lib/store';
 import './pulse.css';
 
 /** Bridge a framework-agnostic store into a Solid signal. */

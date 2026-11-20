@@ -1,7 +1,7 @@
 // Live space-weather data from NOAA's Space Weather Prediction Center.
 // Public domain, no key, CORS-enabled — the browser talks to NOAA directly.
 
-import { createStore } from './store';
+import { createStore } from '../store';
 
 const BASE = 'https://services.swpc.noaa.gov';
 export const GRID_W = 360;

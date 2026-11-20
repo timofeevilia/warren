@@ -36,10 +36,10 @@ export const experiments: Experiment[] = [
     number: '03',
     title: 'Synesthesia',
     description:
-      'An instrument you can see. Play keys or speak into the mic and watch sound become light.',
+      'An instrument you can see. Play the keys or sing into the mic and watch sound become colour and shape.',
     tags: 'Svelte × Solid · Web Audio',
     accent: 'var(--color-accent-synesthesia)',
-    href: null,
+    href: '/synesthesia/',
   },
   {
     id: 'atelier',

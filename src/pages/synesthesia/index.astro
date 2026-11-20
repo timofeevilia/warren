@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import Instrument from '../../components/synesthesia/Instrument.tsx';
+import Shell from '../../components/synesthesia/Shell.svelte';
+---
+
+<Base
+  title="Synesthesia — an instrument you can see · Warren"
+  description="Play notes and watch them become colour and shape. A browser synthesizer whose visuals are drawn live from its own sound."
+>
+  <!-- Solid owns the instrument (canvas, knobs, keys); Svelte owns the way in and the presets.
+       Both drive the same audio engine in src/lib/synesthesia/engine.ts. -->
+  <Instrument client:only="solid-js" />
+  <Shell client:load />
+</Base>
