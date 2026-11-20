@@ -159,7 +159,7 @@ export default function Instrument() {
       if (key === 'z') return setOctave((o) => Math.max(-1, o - 1));
       if (key === 'x') return setOctave((o) => Math.min(1, o + 1));
       const index = KEY_ROW.indexOf(key);
-      if (index < 0 || down.has(key)) return;
+      if (index < 0 || down.has(key) || !started.get()) return; // no playing from the welcome screen
       start();
       const midi = 60 + octave() * 12 + index;
       down.set(key, midi);

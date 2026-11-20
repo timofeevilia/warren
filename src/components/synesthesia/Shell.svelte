@@ -5,30 +5,53 @@
   import { onMount } from 'svelte';
   import { cubicOut } from 'svelte/easing';
   import { crossfade, fade, fly } from 'svelte/transition';
-  import { applyPreset, current, presets, setAutoplay, start, started } from '../../lib/synesthesia/engine';
+  import { applyPreset, autoplay, current, enter, leave, presets, setAutoplay, started } from '../../lib/synesthesia/engine';
 
   let isStarted = $state(false);
   let now = $state(current.get());
   let help = $state(false);
+  let isAuto = $state(false);
 
   // The highlight is one element that "travels" between cards.
   const [send, receive] = crossfade({ duration: 450, easing: cubicOut });
 
   function begin(withDemo: boolean) {
     // Called straight from a click: browsers only unlock audio inside a user gesture.
-    start();
+    enter();
     if (withDemo) setAutoplay(true);
   }
 
+  function home() {
+    help = false;
+    leave();
+  }
+
   onMount(() => {
-    const stops = [started.subscribe((value) => (isStarted = value)), current.subscribe((value) => (now = value))];
-    return () => stops.forEach((stop) => stop());
+    // The engine is a module, so it outlives this page during client-side navigation.
+    // Always begin from the welcome screen, in silence.
+    leave();
+    const stops = [
+      started.subscribe((value) => (isStarted = value)),
+      current.subscribe((value) => (now = value)),
+      autoplay.subscribe((value) => (isAuto = value)),
+    ];
+    return () => {
+      stops.forEach((stop) => stop());
+      leave();
+    };
   });
 </script>
 
 <header class="nav">
   <a href="/" class="label-md muted">← Warren</a>
-  <span class="label-md title">Synesthesia</span>
+  {#if isStarted}
+    <button class="label-md title" onclick={home} title="Back to the start screen">Synesthesia</button>
+    <button class="label-md auto" class:on={isAuto} onclick={() => setAutoplay(!isAuto)}>
+      {isAuto ? '■ Stop' : '▶ Play for me'}
+    </button>
+  {:else}
+    <span class="label-md title">Synesthesia</span>
+  {/if}
 </header>
 
 {#if !isStarted}
@@ -102,11 +125,34 @@
     padding: var(--space-8) var(--gutter);
     pointer-events: none;
   }
-  .nav a {
+  .nav a,
+  .nav button {
     pointer-events: auto;
   }
   .nav a:hover {
     color: var(--color-text-primary);
+  }
+  .nav button.title:hover {
+    color: var(--color-accent-synesthesia);
+  }
+  .auto {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    background: color-mix(in srgb, var(--color-bg-surface) 70%, transparent);
+    transition:
+      color 0.2s,
+      background 0.2s,
+      border-color 0.2s;
+  }
+  .auto:hover {
+    color: var(--color-text-primary);
+  }
+  .auto.on {
+    background: var(--color-accent-synesthesia);
+    border-color: transparent;
+    color: var(--color-bg-ink);
   }
 
   .welcome {
@@ -244,8 +290,9 @@
   }
 
   @media (max-width: 760px) {
-    .title {
-      display: none;
+    .nav {
+      gap: var(--space-4);
+      padding: var(--space-6) var(--space-3);
     }
     .gallery {
       top: auto;

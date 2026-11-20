@@ -64,6 +64,7 @@ export const SCENES = ['Silk', 'Bloom', 'Liquid', 'Strata'];
 export const params = createStore<Params>({ ...presets[0].params });
 /** Which preset the current sound came from, and whether it has been tweaked since. */
 export const current = createStore<{ id: string; edited: boolean }>({ id: presets[0].id, edited: false });
+/** False while the welcome screen is up, true while the instrument is on screen. */
 export const started = createStore(false);
 export const autoplay = createStore(false);
 export const mic = createStore<'off' | 'on' | 'denied'>('off');
@@ -151,7 +152,22 @@ export function start() {
   delay.connect(spaceSend);
 
   applySends(params.get());
+}
+
+/** Welcome screen -> instrument. */
+export function enter() {
+  start();
   started.set(true);
+}
+
+/** Instrument -> welcome screen: silence everything and put the controls away. */
+export function leave() {
+  setAutoplay(false);
+  for (const midi of [...voices.keys()]) releaseVoice(midi, 0.3);
+  pending.clear();
+  publishHeld();
+  if (mic.get() === 'on') void toggleMic();
+  started.set(false);
 }
 
 function applySends(p: Params) {
